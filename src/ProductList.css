@@ -1,7 +1,11 @@
 /* Reset some default styles */
 body, h1, ul {
     margin: 0;
-    padding: 0;
+    padding: 0;    
+}
+
+.category-header-div{
+    display: ruby-text;
 }
 
 /* Set a background color */

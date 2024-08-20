@@ -6,31 +6,53 @@ import './CartItem.css';
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
+  
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+      let totalAmount = 0;
+      cart.map(i=>{
+        totalAmount += i.quantity *  parseFloat(i.cost.replace('$', ''));    
+      });
+      return totalAmount;
   };
 
   const handleContinueShopping = (e) => {
-   
+    e.preventDefault();
+    onContinueShopping(e)
   };
 
+  const handleCheckoutShopping = (e) =>{
+    e.preventDefault();
+    alert('Functionality to be added for future reference');
+  }
 
-
-  const handleIncrement = (item) => {
+  const handleIncrement = (item) => {   
+    let action_payload ={
+      name: item.name,
+      quantity: item.quantity+1
+    }
+    dispatch(updateQuantity(action_payload))
   };
 
-  const handleDecrement = (item) => {
-   
+  const handleDecrement = (item) => {    
+    let action_payload ={
+      name: item.name,
+      quantity: item.quantity-1
+    }
+    dispatch(updateQuantity(action_payload))
   };
 
-  const handleRemove = (item) => {
+  const handleRemove = (item) => {    
+    dispatch(removeItem(item));
   };
 
   // Calculate total cost based on quantity for an item
-  const calculateTotalCost = (item) => {
-  };
+  const calculateTotalCost = (item) => {   
+    let total_cost = 0;
+    total_cost = item.quantity * parseFloat(item.cost.replace('$', ''));    
+    return total_cost;
+  };  
 
   return (
     <div className="cart-container">
@@ -43,7 +65,13 @@ const CartItem = ({ onContinueShopping }) => {
               <div className="cart-item-name">{item.name}</div>
               <div className="cart-item-cost">{item.cost}</div>
               <div className="cart-item-quantity">
-                <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
+                {
+                  item.quantity>1?
+                  <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
+                  :
+                  <button className="cart-item-button cart-item-button-dec" disabled>-</button>
+                }
+                
                 <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
@@ -57,7 +85,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>Checkout</button>
       </div>
     </div>
   );
